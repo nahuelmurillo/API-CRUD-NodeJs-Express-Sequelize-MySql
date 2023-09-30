@@ -1,0 +1,142 @@
+-- Script desde MySQL Workbench (seleccionar todo y copiar)
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema trailerFlix
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema trailerFlix
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `trailerFlix` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema trailerflix
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema trailerflix
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `trailerflix` DEFAULT CHARACTER SET utf8mb3 ;
+USE `trailerFlix` ;
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`categorias`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`categorias` (
+  `categoria_id` INT NOT NULL AUTO_INCREMENT,
+  `catNombre` VARCHAR(100) NULL,
+  PRIMARY KEY (`categoria_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`resumenes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`resumenes` (
+  `resumen_id` INT NOT NULL AUTO_INCREMENT,
+  `resResumen` TEXT NULL,
+  PRIMARY KEY (`resumen_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`catalogos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`catalogos` (
+  `catalogo_id` INT NOT NULL AUTO_INCREMENT,
+  `poster` VARCHAR(255) NULL,
+  `titulo` VARCHAR(255) NULL,
+  `categoria_id` INT NULL,
+  `resumen_id` INT NULL,
+  `temporadas` VARCHAR(100) NULL,
+  `trailer` VARCHAR(255) NULL,
+  PRIMARY KEY (`catalogo_id`),
+  INDEX `catalogoCategorias_idx` (`categoria_id` ASC) VISIBLE,
+  INDEX `catalogoResumen_idx` (`resumen_id` ASC) VISIBLE,
+  CONSTRAINT `catalogo_categorias`
+    FOREIGN KEY (`categoria_id`)
+    REFERENCES `trailerFlix`.`categorias` (`categoria_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `catalogo_resumen`
+    FOREIGN KEY (`resumen_id`)
+    REFERENCES `trailerFlix`.`resumenes` (`resumen_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`generos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`generos` (
+  `genero_id` INT NOT NULL AUTO_INCREMENT,
+  `genNombre` VARCHAR(100) NULL,
+  PRIMARY KEY (`genero_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`catalogosGeneros`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`catalogosGeneros` (
+  `catalogo_genero_id` INT NOT NULL AUTO_INCREMENT,
+  `catalogo_id` INT NULL,
+  `genero_id` INT NULL,
+  PRIMARY KEY (`catalogo_genero_id`),
+  INDEX `catalogoGenero_Catalogo_idx` (`catalogo_id` ASC) VISIBLE,
+  INDEX `catalogoGenero_Genero_idx` (`genero_id` ASC) VISIBLE,
+  CONSTRAINT `catalogoGenero_Catalogo`
+    FOREIGN KEY (`catalogo_id`)
+    REFERENCES `trailerFlix`.`catalogos` (`catalogo_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `catalogoGenero_Genero`
+    FOREIGN KEY (`genero_id`)
+    REFERENCES `trailerFlix`.`generos` (`genero_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`repartos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`repartos` (
+  `reparto_id` INT NOT NULL AUTO_INCREMENT,
+  `repApeNom` VARCHAR(100) NULL,
+  PRIMARY KEY (`reparto_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `trailerFlix`.`catalogosRepartos`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `trailerFlix`.`catalogosRepartos` (
+  `catalogo_reparto_id` INT NOT NULL AUTO_INCREMENT,
+  `catalogo_id` INT NULL,
+  `reparto_id` INT NULL,
+  PRIMARY KEY (`catalogo_reparto_id`),
+  INDEX `catalogoReparto_Catalogo_idx` (`catalogo_id` ASC) VISIBLE,
+  INDEX `catalogoReparto_Reparto_idx` (`reparto_id` ASC) VISIBLE,
+  CONSTRAINT `catalogoReparto_Catalogo`
+    FOREIGN KEY (`catalogo_id`)
+    REFERENCES `trailerFlix`.`catalogos` (`catalogo_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `catalogoReparto_Reparto`
+    FOREIGN KEY (`reparto_id`)
+    REFERENCES `trailerFlix`.`repartos` (`reparto_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+USE `trailerflix` ;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

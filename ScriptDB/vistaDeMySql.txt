@@ -1,0 +1,26 @@
+CREATE 
+    ALGORITHM = UNDEFINED 
+    DEFINER = `root`@`localhost` 
+    SQL SECURITY DEFINER
+VIEW `catalogo_completo` AS
+    SELECT 
+        `catalogos`.`catalogo_id` AS `ID`,
+        `catalogos`.`poster` AS `poster`,
+        `catalogos`.`titulo` AS `titulo`,
+        `categorias`.`catNombre` AS `categoria`,
+        GROUP_CONCAT(DISTINCT `generos`.`genNombre`
+            SEPARATOR ',') AS `Genero`,
+        `resumenes`.`resResumen` AS `Resumen`,
+        `catalogos`.`temporadas` AS `temporadas`,
+        GROUP_CONCAT(DISTINCT `repartos`.`repApeNom`
+            SEPARATOR ',') AS `Reparto`,
+        `catalogos`.`trailer` AS `trailer`
+    FROM
+        ((((((`catalogos`
+        JOIN `categorias` ON ((`categorias`.`categoria_id` = `catalogos`.`categoria_id`)))
+        JOIN `catalogosgeneros` ON ((`catalogosgeneros`.`catalogo_id` = `catalogos`.`catalogo_id`)))
+        JOIN `generos` ON ((`generos`.`genero_id` = `catalogosgeneros`.`genero_id`)))
+        JOIN `resumenes` ON ((`resumenes`.`resumen_id` = `catalogos`.`resumen_id`)))
+        JOIN `catalogosrepartos` ON ((`catalogosrepartos`.`catalogo_id` = `catalogos`.`catalogo_id`)))
+        JOIN `repartos` ON ((`repartos`.`reparto_id` = `catalogosrepartos`.`reparto_id`)))
+    GROUP BY `catalogos`.`catalogo_id`
